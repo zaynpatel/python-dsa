@@ -41,3 +41,4 @@ Return 4321
 
 ### Running question list
 - What format of code allows runtime to be constant, logarithmic, etc? 
+- Do people use np.array() if they want a traditional comp. sci array instead of python lists?
