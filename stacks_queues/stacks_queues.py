@@ -93,6 +93,9 @@ class QueueUsingStacks:
     def dequeue(self):
         # just need to have stack1 with elements to do the dequeue since this is where we're removing elements from to place them in stack2
         if not self.stack2:
+            # check if stack1 is empty, if they are both empty, then the queue is empty and there's no reason to run
+            if not self.stack1:
+                return "Queue is empty"
             # in Python it's not a good idea to have a for loop when I'm modifying any list so I'm using a while loop 
             while self.stack1:
                 # s is the element, iterating through stack1
@@ -103,6 +106,7 @@ class QueueUsingStacks:
         if not self.stack2:
             return "Queue is empty"
         
+        # this will work via FIFO because of how we popped elements above
         return self.stack2.pop()
 
 
