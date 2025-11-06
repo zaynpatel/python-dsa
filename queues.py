@@ -28,7 +28,7 @@ class Queue:
     
     def is_full(self, limit: int):
         if len(self.queue) > limit:
-            return 1
+            return True
     
     def peek(self):
         if self.is_empty():
@@ -63,14 +63,34 @@ class MaxPriorityQueueMethod2:
         self.priority_queue = []
     
     def insert(self, value: Tuple):
-        if len(self.priority_queue) == 0:
-            return self.priority_queue.append(value)
-        for idx, elt in enumerate(self.priority_queue):  # I think this is the problem -- it keeps looping through the existing queue but does not bring in new elements
-            if value[1] < elt[1]:
-                self.priority_queue.insert(idx-1, value)
-            elif value[1] >= elt[1]:
-                self.priority_queue.insert(idx+1, value)
+        if not self.priority_queue:
+            self.priority_queue.append(value)
+        insert_idx = 0
+        for idx, elt in enumerate(self.priority_queue):
+            if value[1] > elt[1]:
+                insert_idx = idx
+                break  # break from the loop so it doesn't overwrite the idx
+            else:
+                insert_idx = len(self.priority_queue)
+        self.priority_queue.insert(insert_idx, value)
         assert sorted(self.priority_queue, key = lambda element: element[1])
+        return
+    
+    def find_max(self):
+        highest = self.priority_queue[0]
+        for val in self.priority_queue:
+            if val[1] > highest[1]:
+                highest = val
+        return highest
+    
+    def increase_key(self, value: Tuple, k: int):
+        """Increase the priority of an element that is already in the queue to a new priority k"""
+        if value in self.priority_queue:
+            self.priority_queue.remove(value)
+            value = (value[0], k)
+            self.insert(value)
+        else:
+            raise QueueException(f"This element: {value} is not in the priority queue")
         return
 
     def extract_max(self):
@@ -79,12 +99,15 @@ class MaxPriorityQueueMethod2:
         return highest
 
 
+
+# Tests
 max_q = MaxPriorityQueueMethod2()
 max_q.insert((2, 0))
 max_q.insert((4, 55))
 max_q.insert((9, 5))
 max_q.insert((8, 10))
 max_q.insert((9, 0))
+max_q.increase_key((9, 0), 56)
 max_q.insert((3, 4))
 max_q.insert((1, 5))
-print(max_q.extract_max())
+print(max_q.find_max())
