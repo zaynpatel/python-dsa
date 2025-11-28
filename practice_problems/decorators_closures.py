@@ -93,3 +93,28 @@ def count_calls(max_calls):
 # square(3)
 # square(10)
 # greet("Liam")
+
+# Problem 5: Build a Stateful Rate-Limiter using __call__
+class RateLimiter:
+    def __init__(self, max_calls=3):
+        self.max_calls = max_calls
+        self.count = 0
+    
+    def __call__(self, *args, **kwargs):
+        self.count += 1  # Explore the difference so when we move to a class we do not need nonlocal
+        # I want self.count to be before the limiter function because I need `self` and I do not have this in limiter
+        if self.count >= self.max_calls:
+            raise RuntimeError(f"Exceeded max number of calls: {self.max_calls}")
+        return args
+
+    def reset(self):
+        assert self.count != 0
+        self.count = 0
+        assert self.count == 0
+        return
+
+# limiter = RateLimiter(max_calls=4)
+# print(limiter("hello"))
+# print(limiter("zayn"))
+# print(limiter("patel"))
+# limiter.reset()
